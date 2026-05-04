@@ -37,22 +37,16 @@ pnpm link --global
 shipit --help
 ```
 
-Intended hosted install command:
+Hosted install command:
 
 ```bash
-curl -fsSL https://shipit.trymetisai.com/install.sh | bash
-```
-
-Future domain:
-
-```bash
-curl -fsSL https://letsshipit.dev/install.sh | bash
+curl -fsSL https://letsshipit.vercel.app/install.sh | bash
 ```
 
 GitHub raw install alternative:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/bloxy-studios/letsshipit/main/install.sh | bash
 ```
 
 ## Quickstart
