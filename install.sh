@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_NAME="shipit"
 VERSION="${SHIPIT_VERSION:-latest}"
-BASE_URL="${SHIPIT_RELEASE_BASE_URL:-https://github.com/<owner>/<repo>/releases/download}"
+REPO="${SHIPIT_REPO:-bloxy-studios/letsshipit}"
 
 info() {
   printf '%s\n' "$*"
@@ -33,10 +33,11 @@ detect_arch() {
 OS="$(detect_os)"
 ARCH="$(detect_arch)"
 
+ASSET="${APP_NAME}-${OS}-${ARCH}"
 if [ "$VERSION" = "latest" ]; then
-  URL="${BASE_URL}/latest/${APP_NAME}-${OS}-${ARCH}"
+  URL="https://github.com/${REPO}/releases/latest/download/${ASSET}"
 else
-  URL="${BASE_URL}/v${VERSION}/${APP_NAME}-${OS}-${ARCH}"
+  URL="https://github.com/${REPO}/releases/download/v${VERSION#v}/${ASSET}"
 fi
 
 if [ -w "/usr/local/bin" ]; then
@@ -52,8 +53,6 @@ trap 'rm -f "$TMP_FILE"' EXIT
 info "Downloading ${APP_NAME} for ${OS}/${ARCH}..."
 info "URL: ${URL}"
 
-# TODO: Replace the placeholder GitHub Releases URL with the real release URL
-# once release artifacts are published.
 curl -fsSL "$URL" -o "$TMP_FILE"
 chmod +x "$TMP_FILE"
 mv "$TMP_FILE" "${INSTALL_DIR}/${APP_NAME}"

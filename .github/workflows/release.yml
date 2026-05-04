@@ -1,0 +1,63 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build & release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.2.18'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build binaries
+        run: |
+          set -e
+          mkdir -p release
+          for target in darwin-arm64 darwin-x64 linux-arm64 linux-x64; do
+            echo "::group::Building shipit-${target}"
+            bun build src/index.ts \
+              --compile \
+              --minify \
+              --sourcemap \
+              --target=bun-${target} \
+              --outfile=release/shipit-${target}
+            echo "::endgroup::"
+          done
+
+      - name: Generate checksums
+        working-directory: release
+        run: shasum -a 256 shipit-* > SHA256SUMS
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/shipit-darwin-arm64
+            release/shipit-darwin-x64
+            release/shipit-linux-arm64
+            release/shipit-linux-x64
+            release/SHA256SUMS
+          generate_release_notes: true
+          fail_on_unmatched_files: true
