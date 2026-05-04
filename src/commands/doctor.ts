@@ -36,7 +36,7 @@ export async function doctorCommand(cwd: string, options: DoctorOptions = {}) {
   const ghAuthed = ghInstalled ? await isGithubCliAuthenticated() : false;
 
   const checks: DoctorCheck[] = [
-    { name: 'Node', ok: Number(process.versions.node.split('.')[0]) >= 20, detail: process.versions.node },
+    { name: 'Node', ok: Number(process.versions.node.split('.')[0]) >= 24, detail: process.versions.node },
     { name: 'Git', ok: await gitInstalled() },
     { name: 'Repository', ok: analysis.git.isRepo, detail: analysis.git.isRepo ? 'initialized' : 'not initialized' },
     {
