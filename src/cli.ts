@@ -16,7 +16,7 @@ import { registerStatusCommand } from './commands/status.js';
 import { registerSuggestCommand } from './commands/suggest.js';
 import { registerUpdateCommand } from './commands/update.js';
 
-export const version = '0.1.1';
+export const version = '0.1.2';
 
 export async function runCli(argv: string[]): Promise<void> {
   const program = new Command();
